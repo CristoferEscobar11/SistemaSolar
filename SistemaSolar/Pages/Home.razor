@@ -1,0 +1,157 @@
+﻿@page "/"
+@layout LayoutVacio
+
+<PageTitle>Sistema Solar</PageTitle>
+
+@if (pantallaBienvenida)
+{
+    <div class="bienvenida">
+        <div class="capa-estrellas capa-estrellas--bienvenida"></div>
+        <div class="tarjeta-bienvenida">
+            <span class="estrella-decorativa">✦</span>
+            <h1>Para @nombreDestinataria</h1>
+            <p>Antes de que entres, quiero que sepas que esto lo hice pensando en usted.</p>
+            <button class="btn-entrar" @onclick="Entrar">Entrar ✦</button>
+        </div>
+    </div>
+}
+else
+{
+    <div class="contenedor-solar">
+        <div class="tarjeta-espacio">
+            <div class="columna-escena">
+                <h1 class="titulo">Sistema Solar</h1>
+                <p class="subtitulo">Toca el Sol o un planeta para ver su mensaje</p>
+                <p class="contador">@planetasVistos.Count de @planetas.Count planetas explorados</p>
+                @if (planetasVistos.Count == planetas.Count)
+                {
+                    <p class="celebracion">✨ Ya vio todo mi universo, espero le haya gustado✨</p>
+                }
+
+                <div class="escena">
+                    <div class="escena-envoltorio">
+                        <div class="escena">
+                            <div class="capa-estrellas"></div>
+                            <div class="estrella-fugaz estrella-fugaz--1"></div>
+                            <div class="estrella-fugaz estrella-fugaz--2"></div>
+                            <div class="estrella-fugaz estrella-fugaz--3"></div>
+                            <button class="sol" @onclick="() => Seleccionar(-1)" title="Sol" aria-label="Sol"></button>
+
+                            @for (int i = 0; i < planetas.Count; i++)
+                            {
+                                var idx = i;
+                                var p = planetas[idx];
+                                <div class="orbita" style="--radio:@(p.DistanciaPx)px; --duracion:@(p.DuracionSeg)s; --color:@p.Color">
+                                    <button class="planeta @p.Clase @(idx == seleccionado ? "activo" : "")"
+                                            style="--color:@p.Color; --tamano:@(p.TamanoPx)px"
+                                            @onclick="() => Seleccionar(idx)"
+                                            title="@p.Nombre"
+                                            aria-label="@p.Nombre"></button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="estrella-fugaz estrella-fugaz--1"></div>
+                    <div class="estrella-fugaz estrella-fugaz--2"></div>
+                    <div class="estrella-fugaz estrella-fugaz--3"></div>
+                    <div class="capa-estrellas"></div>
+                    <button class="sol" @onclick="() => Seleccionar(-1)" title="Sol" aria-label="Sol"></button>
+
+                    @for (int i = 0; i < planetas.Count; i++)
+                    {
+                        var idx = i;
+                        var p = planetas[idx];
+                        <div class="orbita" style="--radio:@(p.DistanciaPx)px; --duracion:@(p.DuracionSeg)s; --color:@p.Color">
+                            <button class="planeta @p.Clase @(idx == seleccionado ? "activo" : "")"
+                                    style="--color:@p.Color; --tamano:@(p.TamanoPx)px"
+                                    @onclick="() => Seleccionar(idx)"
+                                    title="@p.Nombre"
+                                    aria-label="@p.Nombre"></button>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <aside class="panel-mensaje" style="--acento:@ColorSeleccionado()">
+                <div class="contenido-mensaje" @key="seleccionado">
+                    @if (seleccionado is null)
+                    {
+                        <span class="etiqueta">Esperando selección</span>
+                        <p class="ayuda">Toca un planeta (o el Sol) para leer su mensaje ✨</p>
+                    }
+                    else if (seleccionado == -1)
+                    {
+                        <span class="etiqueta">☀ Sol</span>
+                        <h2>Sol</h2>
+                        <p>@mensajeSol</p>
+                    }
+                    else
+                    {
+                        var p = planetas[seleccionado.Value];
+                        <span class="etiqueta">Planeta @(seleccionado + 1) de @planetas.Count</span>
+                        <h2>@p.Nombre</h2>
+                        <p>@p.Mensaje</p>
+                    }
+                </div>
+            </aside>
+        </div>
+    </div>
+}
+
+@code {
+    private bool pantallaBienvenida = true;
+
+    // 👉 Escribe aquí su nombre
+    private string nombreDestinataria = "Guadalupe";
+
+    private int? seleccionado = null;
+    private HashSet<int> planetasVistos = new();
+
+    // 👉 Escribe aquí el mensaje del Sol
+    private string mensajeSol = "Todo este pequeño universo lo hice pensando en usted. Espero que, aunque sea un rato, la haga sonreír tanto como usted me hace sonreír a mí";
+
+    private class Planeta
+    {
+        public string Nombre { get; set; } = "";
+        public string Mensaje { get; set; } = "";
+        public string Color { get; set; } = "#ffffff";
+        public double DistanciaPx { get; set; }
+        public double DuracionSeg { get; set; }
+        public double TamanoPx { get; set; }
+        public string Clase { get; set; } = "";
+    }
+
+    // 👉 Escribe aquí el mensaje de cada planeta (campo Mensaje)
+    private List<Planeta> planetas = new()
+    {
+        new() { Nombre="Mercurio", Color="#b1aca6", DistanciaPx=60,  DuracionSeg=6,  TamanoPx=11, Mensaje="Me gusto mucho la manera en la que nos conocimos." },
+        new() { Nombre="Venus",    Color="#d8b384", DistanciaPx=85,  DuracionSeg=9,  TamanoPx=15, Mensaje="El tiempo con usted la verdad es un regalo." },
+        new() { Nombre="Tierra",   Color="#4f8fdb", DistanciaPx=112, DuracionSeg=13, TamanoPx=17, Mensaje="Con usted me siento como en casa." },
+        new() { Nombre="Marte",    Color="#c1553a", DistanciaPx=136, DuracionSeg=17, TamanoPx=14, Mensaje="Me encanta esa energía que tiene, la forma en la que se apasiona por las cosas que le gustan. Contagia." },
+        new() { Nombre="Júpiter",  Color="#d8a56b", DistanciaPx=168, DuracionSeg=24, TamanoPx=26, Mensaje="Admiro más de lo que te imaginas lo fuerte y constante que eres con lo que te propones." },
+        new() { Nombre="Saturno",  Color="#e3cf9a", DistanciaPx=205, DuracionSeg=30, TamanoPx=22, Mensaje="Usted es muy especial para mi.", Clase="saturno" },
+        new() { Nombre="Urano",    Color="#9fd3d8", DistanciaPx=238, DuracionSeg=36, TamanoPx=18, Mensaje="Atrapado de todos los temas que tenemos en común." },
+        new() { Nombre="Neptuno",  Color="#5d7fd1", DistanciaPx=266, DuracionSeg=42, TamanoPx=18, Mensaje="Solo quiero verla bien siempre y claro yo me encargare de eso." },
+    };
+
+    private void Entrar()
+    {
+        pantallaBienvenida = false;
+    }
+
+    private void Seleccionar(int indice)
+    {
+        seleccionado = indice;
+        if (indice >= 0)
+        {
+            planetasVistos.Add(indice);
+        }
+    }
+
+    private string ColorSeleccionado()
+    {
+        if (seleccionado is null) return "#7c8bb0";
+        if (seleccionado == -1) return "#ffb703";
+        return planetas[seleccionado.Value].Color;
+    }
+}
