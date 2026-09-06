@@ -28,47 +28,27 @@ else
                     <p class="celebracion">✨ Ya vio todo mi universo, espero le haya gustado✨</p>
                 }
 
-                <div class="escena">
-                    <div class="escena-envoltorio">
-                        <div class="escena">
-                            <div class="capa-estrellas"></div>
-                            <div class="estrella-fugaz estrella-fugaz--1"></div>
-                            <div class="estrella-fugaz estrella-fugaz--2"></div>
-                            <div class="estrella-fugaz estrella-fugaz--3"></div>
-                            <button class="sol" @onclick="() => Seleccionar(-1)" title="Sol" aria-label="Sol"></button>
+                <div class="escena-envoltorio">
+                    <div class="escena">
+                        <div class="capa-estrellas"></div>
+                        <div class="estrella-fugaz estrella-fugaz--1"></div>
+                        <div class="estrella-fugaz estrella-fugaz--2"></div>
+                        <div class="estrella-fugaz estrella-fugaz--3"></div>
+                        <button class="sol" @onclick="() => Seleccionar(-1)" title="Sol" aria-label="Sol"></button>
 
-                            @for (int i = 0; i < planetas.Count; i++)
-                            {
-                                var idx = i;
-                                var p = planetas[idx];
-                                <div class="orbita" style="--radio:@(p.DistanciaPx)px; --duracion:@(p.DuracionSeg)s; --color:@p.Color">
-                                    <button class="planeta @p.Clase @(idx == seleccionado ? "activo" : "")"
-                                            style="--color:@p.Color; --tamano:@(p.TamanoPx)px"
-                                            @onclick="() => Seleccionar(idx)"
-                                            title="@p.Nombre"
-                                            aria-label="@p.Nombre"></button>
-                                </div>
-                            }
-                        </div>
+                        @for (int i = 0; i < planetas.Count; i++)
+                        {
+                            var idx = i;
+                            var p = planetas[idx];
+                            <div class="orbita" style="--radio:@(p.DistanciaPx)px; --duracion:@(p.DuracionSeg)s; --color:@p.Color">
+                                <button class="planeta @p.Clase @(idx == seleccionado ? "activo" : "")"
+                                        style="--color:@p.Color; --tamano:@(p.TamanoPx)px"
+                                        @onclick="() => Seleccionar(idx)"
+                                        title="@p.Nombre"
+                                        aria-label="@p.Nombre"></button>
+                            </div>
+                        }
                     </div>
-                    <div class="estrella-fugaz estrella-fugaz--1"></div>
-                    <div class="estrella-fugaz estrella-fugaz--2"></div>
-                    <div class="estrella-fugaz estrella-fugaz--3"></div>
-                    <div class="capa-estrellas"></div>
-                    <button class="sol" @onclick="() => Seleccionar(-1)" title="Sol" aria-label="Sol"></button>
-
-                    @for (int i = 0; i < planetas.Count; i++)
-                    {
-                        var idx = i;
-                        var p = planetas[idx];
-                        <div class="orbita" style="--radio:@(p.DistanciaPx)px; --duracion:@(p.DuracionSeg)s; --color:@p.Color">
-                            <button class="planeta @p.Clase @(idx == seleccionado ? "activo" : "")"
-                                    style="--color:@p.Color; --tamano:@(p.TamanoPx)px"
-                                    @onclick="() => Seleccionar(idx)"
-                                    title="@p.Nombre"
-                                    aria-label="@p.Nombre"></button>
-                        </div>
-                    }
                 </div>
             </div>
 
@@ -101,13 +81,11 @@ else
 @code {
     private bool pantallaBienvenida = true;
 
-    // 👉 Escribe aquí su nombre
     private string nombreDestinataria = "Guadalupe";
 
     private int? seleccionado = null;
     private HashSet<int> planetasVistos = new();
 
-    // 👉 Escribe aquí el mensaje del Sol
     private string mensajeSol = "Todo este pequeño universo lo hice pensando en usted. Espero que, aunque sea un rato, la haga sonreír tanto como usted me hace sonreír a mí";
 
     private class Planeta
@@ -121,7 +99,6 @@ else
         public string Clase { get; set; } = "";
     }
 
-    // 👉 Escribe aquí el mensaje de cada planeta (campo Mensaje)
     private List<Planeta> planetas = new()
     {
         new() { Nombre="Mercurio", Color="#b1aca6", DistanciaPx=60,  DuracionSeg=6,  TamanoPx=11, Mensaje="Me gusto mucho la manera en la que nos conocimos." },
